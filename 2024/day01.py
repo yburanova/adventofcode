@@ -1,28 +1,20 @@
-import numpy as np
-
 file_path = "day01.txt"
 
 def get_left_right_lists(file_path):
     left = []
     right = []
 
-    with open(file_path) as file:
-        for line in file.readlines():
-            left_token, right_token = line.split()
+    with open(file_path, 'r') as file:
+        for line in file:
+            left_token, right_token = line.strip().split()
             left.append(int(left_token))
-            right.append((int(right_token.replace('\n', ''))))
+            right.append(int(right_token))
 
     return left, right
 
 def solve_part_I():
     left, right = get_left_right_lists(file_path)
-    left_np = np.array(left)
-    left_np.sort()
-
-    right_np = np.array(right)
-    right_np.sort()
-
-    return sum(np.abs(right_np - left_np))
+    return sum(abs(r - l) for l, r in zip(sorted(left), sorted(right)))
 
 def solve_part_II():
     left, right = get_left_right_lists(file_path)
