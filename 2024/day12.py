@@ -20,24 +20,11 @@ def process_position(current_position, all_letter_positions, visited_positions):
     all_letter_positions.remove(current_position)
     visited_positions.append(current_position)
 
-    # print("Processing positions: ", current_position)
-    # print("The same letter at: ", all_letter_positions)
-    # print("I saw positions: ", visited_positions)
-
-    area_r, perimeter_r = visit_position(current_position, 1, 0, all_letter_positions, visited_positions)
-    area_d, perimeter_d = visit_position(current_position, 0, 1, all_letter_positions, visited_positions)
-    area_l, perimeter_l = visit_position(current_position, -1, 0, all_letter_positions, visited_positions)
-    area_u, perimeter_u = visit_position(current_position, 0, -1, all_letter_positions, visited_positions)
-
-    area += area_r
-    area += area_u
-    area += area_l
-    area += area_d
-
-    perimeter += perimeter_r
-    perimeter += perimeter_u
-    perimeter += perimeter_l
-    perimeter += perimeter_d
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    for dx, dy in directions:
+        area_delta, perimeter_delta = visit_position(current_position, dx, dy, all_letter_positions, visited_positions)
+        area += area_delta
+        perimeter += perimeter_delta
 
     return area, perimeter
 
@@ -47,32 +34,50 @@ def visit_position(current_position, dx, dy, all_letter_positions, visited_posit
     if pos in all_letter_positions: # continue in field
         area, perimeter = process_position(pos, all_letter_positions, visited_positions)
         return area, perimeter
-    elif pos not in visited_positions: # border - other type or field border
-        return 0, 1
-    else: # we were there
+    elif pos in visited_positions: # we were there
         return 0, 0
+    else: # border - other type or field border
+        return 0, 1
 
 
 def get_area_and_perimeter(all_letter_positions):
-    new_positions = deepcopy(all_letter_positions)
+    visited_positions = list()
+    area, perimeter = process_position(all_letter_positions[0], all_letter_positions, visited_positions)
+    return area, perimeter, all_letter_positions, visited_positions
 
-    area, perimeter = process_position(new_positions[0], new_positions, list())
-    # print("Area: ", area)
-    # print("Perimeter: ", perimeter)
+def get_corners(coordinates):
+    all_corners_map = {}
+    directions = [(0, 0), (0, 1), (1, 0), (1, 1)]
 
-    return area, perimeter, new_positions
+    for coordinate in coordinates:
+        for dx, dy in directions:
+            all_corners_map.setdefault((coordinate[0] + dy, coordinate[1] + dx), list()).append(coordinate)
 
+    corner_sum = 0
+    for corner, neig_blocks in all_corners_map.items():
+        if len(neig_blocks) in {1, 3}:
+            corner_sum += 1
+        elif len(neig_blocks) == 2:
+            block_1, block_2 = neig_blocks
+            if block_1[0] != block_2[0] and block_1[1] != block_2[1]:
+                corner_sum += 2
 
+    return corner_sum
 
-def solve_part_i():
+def solve():
     letter_map = get_letter_map()
-    print(letter_map)
-    result = 0
+    result_part_i = 0
+    result_part_ii = 0
     for letter, coordinates in letter_map.items():
         while len(coordinates) != 0:
-            area, perimeter, coordinates = get_area_and_perimeter(coordinates)
-            result += area * perimeter
+            area, perimeter, coordinates, visited_positions = get_area_and_perimeter(coordinates)
+            result_part_i += area * perimeter
 
-    print(result)
+            corners = get_corners(visited_positions)
+            result_part_ii += area * corners
 
-solve_part_i()
+    print("Part I", result_part_i)
+    print("Part II", result_part_ii)
+
+if __name__ == "__main__":
+    solve()
