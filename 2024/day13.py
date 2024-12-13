@@ -7,7 +7,7 @@ Prize = namedtuple('Prize', 'x y')
 Button = namedtuple('Button', 'x y')
 Machine = namedtuple('Machine', 'prize button_a button_b')
 
-def read_file():
+def read_file(part = 1):
     with open(filepath) as file:
         machines = []
         button_a = None
@@ -19,16 +19,19 @@ def read_file():
             elif line.startswith("Button B"):
                 button_b = get_button(line)
             elif line.startswith("Prize"):
-                prize = get_prize(line)
+                prize = get_prize(line, part)
             else: # empty line
                 machines.append(Machine(prize, button_a, button_b))
 
     return machines
 
-def get_prize(line):
+def get_prize(line, part = 1):
     tokens = line.strip().split()
     x = int(tokens[1].split("=")[1][:-1])
     y = int(tokens[2].split("=")[1])
+    if part == 2:
+        x += 10000000000000
+        y += 10000000000000
     return Prize(x, y)
 
 def get_button(line):
@@ -61,4 +64,17 @@ def solve_part_i():
 
     print(f"Part I: {sum_tokens}")
 
-solve_part_i()
+def solve_part_ii():
+    machines = read_file(part = 2)
+    sum_tokens = 0
+    for machine in machines:
+        print(machine)
+        push_a, push_b = solve_machine_equation(machine)
+        print(push_a, ",", push_b)
+
+        if isinstance(push_a, Integer) and isinstance(push_b, Integer):
+            sum_tokens += int(push_a) * 3 + int(push_b)
+
+    print(f"Part II: {sum_tokens}")
+
+solve_part_ii()
