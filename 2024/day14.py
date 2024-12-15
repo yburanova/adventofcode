@@ -1,7 +1,6 @@
 import math
 import numpy as np
 import pygame
-import time
 
 filepath = "day14.txt"
 

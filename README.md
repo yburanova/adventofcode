@@ -1,6 +1,6 @@
 <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  2024 - 24 ⭐ - Python
+  2024 - 25 ⭐ - Python
 </h1>
 <a href="2024/day01.py">
   <img src=".aoc_tiles/tiles/2024/01.png" width="161px">
@@ -43,5 +43,8 @@
 </a>
 <a href="2024/day14.py">
   <img src=".aoc_tiles/tiles/2024/14.png" width="161px">
+</a>
+<a href="2024/day15.py">
+  <img src=".aoc_tiles/tiles/2024/15.png" width="161px">
 </a>
 <!-- AOC TILES END -->
