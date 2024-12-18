@@ -30,11 +30,10 @@ def is_valid_move(bytes, y, x, visited):
 
 def walk_maze(maze, falling_bytes):
 
-    start = (0, 0) # initial position
-    end = (maze[1] - 1, maze[0] - 1) # end position
+    start = (0, 0)
+    end = (maze[1] - 1, maze[0] - 1)
     directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
-    # Initialize queue and visited paths
     queue = deque([(start, 0)])
     parent = {start: None}
 
@@ -42,8 +41,7 @@ def walk_maze(maze, falling_bytes):
         current_position, current_depth = queue.popleft()
         x, y = current_position
 
-        # If we've reached the end, save the path
-        if current_position == end:
+        if current_position == end: # If we've reached the end, save the path
             path = []
             while current_position:
                 path.append(current_position)
@@ -59,9 +57,9 @@ def walk_maze(maze, falling_bytes):
             nx, ny = x + dx, y + dy
             next_position = (nx, ny)
 
-            if is_valid_move(falling_bytes, nx, ny, parent):  # Avoid revisiting cells in the current path
+            if is_valid_move(falling_bytes, nx, ny, parent):
                 queue.append((next_position, current_depth + 1))
-                parent[next_position] = current_position  # Track parent
+                parent[next_position] = current_position
 
     return None
 
@@ -71,7 +69,6 @@ def solve_part_i():
     falling_bytes = read_file()[:bytes_felt]
     path = walk_maze(field, falling_bytes)
     print_path(field, falling_bytes, path)
-    #scores = list(map(len, paths))
     print("Part I: ", len(path) - 1)
 
 def solve_part_ii():
@@ -93,7 +90,6 @@ def solve_part_ii():
         else:
             print(f"Path found byte {i}: {next_byte}, path length: {len(path) - 1}")
             previous_path = path
-            #print_path(field, falling_bytes, path)
 
 #solve_part_i()
 solve_part_ii()
