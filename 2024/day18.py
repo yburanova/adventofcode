@@ -48,7 +48,7 @@ def walk_maze(maze, falling_bytes):
             while current_position:
                 path.append(current_position)
                 current_position = parent[current_position]
-            print("Path found: ", path[::-1])
+            #print("Path found: ", path[::-1])
             #print_path(maze, falling_bytes, current_path)
             return path[::-1]  # Reverse the path
 
@@ -74,4 +74,26 @@ def solve_part_i():
     #scores = list(map(len, paths))
     print("Part I: ", len(path) - 1)
 
-solve_part_i()
+def solve_part_ii():
+    falling_bytes = read_file()
+    previous_path = None
+    for i in range(bytes_felt+1, len(falling_bytes)):
+
+        next_byte = falling_bytes[i - 1]
+        if previous_path is not None and next_byte not in previous_path:
+            print(f"The same path found byte {i}: {next_byte}")
+            continue
+
+        bytes_to_check = falling_bytes[:i]
+        path = walk_maze(field, bytes_to_check)
+        if path is None:
+            print(f"No exit! Stopped by the byte {i}: {next_byte}")
+            print(f"Part II: {next_byte[1]},{next_byte[0]}")
+            break
+        else:
+            print(f"Path found byte {i}: {next_byte}, path length: {len(path) - 1}")
+            previous_path = path
+            #print_path(field, falling_bytes, path)
+
+#solve_part_i()
+solve_part_ii()
