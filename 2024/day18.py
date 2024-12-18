@@ -91,5 +91,5 @@ def solve_part_ii():
             print(f"Path found byte {i}: {next_byte}, path length: {len(path) - 1}")
             previous_path = path
 
-#solve_part_i()
+solve_part_i()
 solve_part_ii()
