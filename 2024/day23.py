@@ -70,5 +70,5 @@ def solve_part_ii():
     print(largest_comp_connection)
     print(f"Part II: {','.join(largest_comp_connection)}")
 
-#solve_part_i()
+solve_part_i()
 solve_part_ii()
