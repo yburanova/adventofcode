@@ -50,7 +50,7 @@ def get_value(wire, gates, current_stack):
 def simulate_for_z(initial_values, gates, z_nodes):
     current_stack = initial_values
     for z_node in z_nodes:
-        get_value(current_stack, gates, z_node)
+        get_value(z_node, gates, current_stack)
         if all_z_set(current_stack, z_nodes):
             break
 
