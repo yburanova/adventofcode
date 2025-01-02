@@ -15,7 +15,7 @@ def transpose_and_search(lines):
     return result
 
 
-def solve_part_I():
+def solve_part_i():
     lines = [line.strip() for line in open(filepath)]
 
     result = 0
@@ -70,5 +70,5 @@ def solve_part_ii():
 
     print("Part II:", result)
 
-solve_part_I()
+solve_part_i()
 solve_part_ii()
