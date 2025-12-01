@@ -84,8 +84,8 @@ def solve_part_II():
     return how_many_0
 
 
-#result_1 = solve_part_I()
-#print(result_1)
+result_1 = solve_part_I()
+print(result_1)
 
 result_2 = solve_part_II()
 print(result_2)
