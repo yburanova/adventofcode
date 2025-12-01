@@ -47,7 +47,6 @@ def follow_command_and_count_zeroes(initial, command):
         end_value -= 100
         how_many_zeroes += 1
 
-
     return end_value, how_many_zeroes
 
 
