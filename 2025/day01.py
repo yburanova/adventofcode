@@ -87,6 +87,5 @@ def solve_part_II():
 result_1 = solve_part_I()
 print(result_1)
 
-
 result_2 = solve_part_II()
 print(result_2)
