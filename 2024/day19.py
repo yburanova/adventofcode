@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 filepath = "day19.txt"
 
 def read_file():
@@ -26,7 +28,6 @@ def clean_towels(towels):
 
     return cleaned_towels
 
-
 def find_combination(design, towels):
     all_fitting_start_towels = [towel for towel in towels if design.startswith(towel)]
     #print("Design: ", design)
@@ -41,11 +42,44 @@ def find_combination(design, towels):
             else:
                 continue
         else:
-            print("Design Found")
+            #print("Design Found")
             return True
 
-
     return result
+
+def find_all_combinations(design, towels):
+
+    @lru_cache(None)
+    def helper(design):
+        # Base case: if the design is empty, we found a valid combination
+        if not design:
+            return [[]]  # Return a list with an empty combination
+
+        # Get all towels that fit the start of the current design
+        all_fitting_start_towels = [towel for towel in towels if design.startswith(towel)]
+
+        # If no towels fit, return empty list
+        if not all_fitting_start_towels:
+            return []
+
+        # Store all valid combinations for the current design
+        all_combinations = []
+
+        # Try each towel and recursively find combinations
+        for towel in all_fitting_start_towels:
+            remaining_design = design[len(towel):]
+            sub_combinations = helper(remaining_design)
+
+            # Limit memory usage by avoiding nested combination generation if sub_combinations is too large
+            #if len(sub_combinations) > 50000:  # Arbitrary threshold to prevent memory explosion
+            #    continue
+
+            all_combinations.extend([[towel] + combination for combination in sub_combinations])
+
+        return all_combinations
+
+    return helper(design)
+
 
 def solve_part_i():
     towels, designs = read_file()
@@ -59,4 +93,23 @@ def solve_part_i():
 
     print(f"Part I: {result}")
 
-solve_part_i()
+def solve_part_ii():
+    towels, designs = read_file()
+    cleaned_towels = clean_towels(towels)
+    result = 0
+    working_designs = []
+    for design in designs:
+        if find_combination(design, cleaned_towels):
+            working_designs.append(design)
+
+    print(f"Found all {len(working_designs)} working combinations")
+    for design in working_designs:
+        print("Design", design)
+        combinations = find_all_combinations(design, towels)
+        #print(combinations)
+        result += len(combinations)
+
+    print(f"Part I: {result}")
+
+# solve_part_i()
+solve_part_ii()

@@ -4,6 +4,7 @@ filepath = "day21_test.txt"
 
 numeric_keyboard = np.array([['7','8','9'],['4','5','6'],['1','2','3'],['','0','A']])
 directional_keyboard = np.array([['','^','A'],['<','v', '>']])
+directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 def read_file():
     return [line.strip() for line in open(filepath)]
@@ -11,6 +12,23 @@ def read_file():
 def is_valid_move(maze, x, y, visited):
     rows, cols = len(maze), len(maze[0])
     return 0 <= x < rows and 0 <= y < cols and maze[x][y] != '' and (x, y) not in visited
+
+def get_correct_directions(x, y, end):
+    directions_set = set()
+    end_y, end_x = end
+    dy = end_y - y
+    dx = end_x - x
+    if dx > 0:
+        directions_set.add((0, 1))
+    elif dx < 0:
+        directions_set.add((0, -1))
+
+    if dy > 0:
+        directions_set.add((1, 0))
+    elif dy < 0:
+        directions_set.add((-1, 0))
+
+    return directions_set
 
 def walk(maze, x, y, end, path, visited, paths):
 
@@ -20,7 +38,7 @@ def walk(maze, x, y, end, path, visited, paths):
 
     visited.add((x, y))
 
-    for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+    for dx, dy in get_correct_directions(x, y, end):
         nx, ny = x + dx, y + dy  # next position
         if is_valid_move(maze, nx, ny, visited):
             path.append((nx, ny))
@@ -37,8 +55,8 @@ def find_paths(keyboard, from_code, to_code):
     visited = set()
 
     walk(keyboard, start[0], start[1], end, [start], visited, paths)
-    shortest_paths = [path for path in paths if len(path) == len(min(paths, key=len))]
-    return shortest_paths
+    paths = [path for path in paths if len(path) == len(min(paths, key=len))]
+    return paths
 
 def turn_sequences_to_signs(sequences):
     # Initialize an empty list to store commands
@@ -71,7 +89,7 @@ def turn_sequences_to_signs(sequences):
     return sign_sequences
 
 def get_sequences(code, keyboard):
-    print("Code", code)
+    #print("Code", code)
     start_position = 'A'
     sequences = []
 
@@ -91,27 +109,32 @@ def get_sequences(code, keyboard):
             sequence.append('A')
 
     sequences = turn_sequences_to_signs(sequences)
-    for sequence in sequences:
-        print(sequence)
+    #for sequence in sequences:
+    #    print(sequence)
     return sequences
 
 
 def get_shortest_sequence(code):
     sequences = get_sequences(code, keyboard=numeric_keyboard)
-    sequences_complete = []
 
     for i in range(2):
         sequences_1 = []
         for sequence in sequences:
             sequences_2 = get_sequences(sequence, keyboard=directional_keyboard)
-            sequences_1.extend(sequences_2)
-        shortest_sequences = [path for path in sequences_1 if len(path) == len(min(sequences_1, key=len))]
+            shortest_sequences = [path for path in sequences_2 if len(path) == len(min(sequences_2, key=len))]
+            sequences_1.extend(shortest_sequences)
+        print("found sequences", len(sequences_1))
+
+        shortest_sequences = []
+        for path in sequences_1:
+            if len(path) == len(min(sequences_1, key=len)):
+                shortest_sequences.append(path)
+
+        print("Shortest:", len(shortest_sequences[0]))
         #sequences_complete.extend(shortest_sequences)
         sequences = shortest_sequences
 
-    print(sequences_complete[0])
-
-    return ''
+    return len(shortest_sequences[0])
 
 
 def solve_part_i():
