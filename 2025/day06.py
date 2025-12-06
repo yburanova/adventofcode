@@ -48,26 +48,16 @@ def calculate(last_sign, nums):
 
 def solve_part_II():
     all_lines = read_file_part_II()
-    print(all_lines)
 
     max_len = max(len(line) for line in all_lines)
+    updated_all_lines = [line.ljust(max_len) for line in all_lines] # all lines must have equal length
 
-    updated_all_lines = []
-
-    for line in all_lines: # all lines must have equal length
-        while len(line) < max_len:
-            line += ' '
-        updated_all_lines.append(line)
-
-    print(updated_all_lines)
-
-    transposed = tuple(zip(*updated_all_lines))
-    print(transposed)
+    transposed = zip(*updated_all_lines)
 
     result = 0
-
     nums = []
     last_sign = ''
+
     for line in transposed:
         num = ''
 
@@ -78,22 +68,19 @@ def solve_part_II():
                 last_sign = sign
 
         if num == '':
-            result += calculate(last_sign, nums)
-            print(f"Numbers {nums} with sign: {last_sign} gives result: {result}")
+            r = calculate(last_sign, nums)
+            result += r
+            print(f"Numbers {nums} with sign: {last_sign} gives result: {r}")
             nums = []
             last_sign = ''
         else:
             nums.append(int(num))
 
-    result += calculate(last_sign, nums)
-    print(f"Numbers {nums} with sign: {last_sign} gives result: {result}")
-    nums = []
-    last_sign = ''
-
+    r = calculate(last_sign, nums)
+    result += r
+    print(f"Numbers {nums} with sign: {last_sign} gives result: {r}")
 
     return result
-
-
 
 
 result_2 = solve_part_II()
